@@ -237,8 +237,10 @@ public class MongoURI {
      */
     public DB connectDB()
         throws MongoException , UnknownHostException {
-        // TODO auth
-        return connect().getDB( _database );
+        DB db = connect().getDB(_database);
+        if (_username != null && _password != null && !db.isAuthenticated() && !db.authenticate(_username, _password))
+            throw new RuntimeException("Not authenticated");
+        return db;
     }
 
     /**
@@ -247,8 +249,10 @@ public class MongoURI {
      * @return
      */
     public DB connectDB( Mongo m ){
-        // TODO auth
-        return m.getDB( _database );
+        DB db = m.getDB(_database);
+        if (_username != null && _password != null && !db.isAuthenticated() && !db.authenticate(_username, _password))
+            throw new RuntimeException("Not authenticated");
+        return db;
     }
 
     /**
